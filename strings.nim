@@ -1,28 +1,18 @@
-import pieces, board, strutils, sq, options, tables
+import pieces, board, sq, strutils, tables
 
-proc newBoard*(str: string): Board = 
-  var pieces: seq[(Sq, Piece)]
-  for y, line in pairs(str.splitLines):
-    for x, c in line.pairs:
-      let color = if c.isUpperAscii: White else: Black
-      var piece: Piece
-      case c.toLowerAscii:
-      of 'p': piece = Pawn(color: color)
-      of 'n': piece = Knight(color: color)
-      of 'b': piece = Pawn(color: color)
-      of 'r': piece = Pawn(color: color)
-      of 'q': piece = Pawn(color: color)
-      of 'k': piece = Pawn(color: color)
-      else: discard c
-      pieces.add((sq(x, y), piece))
-  pieces.toTable
+proc `$`*(p: Piece): string = $p.letter
 
 proc toString*(b: Board): string =
   for y in 0..7:
     for x in 0..7:
       let sqContent = b.at(x, y)
-      if sqContent.isSome: result.add(sqContent.get.letter)
-      else: result.add('.')
+      if not sqContent.isNil: 
+        if sqContent.color == White:
+          result.add(sqContent.letter.toUpperAscii)
+        else: 
+          result.add(sqContent.letter)
+      else: 
+        result.add('.')
     result.add('\n')
 
 proc toString*(moves: seq[Sq]): string =
@@ -31,6 +21,23 @@ proc toString*(moves: seq[Sq]): string =
       if sq(x,y) in moves: result.add('X')
       else: result.add('.')
     result.add('\n')
+
+proc newBoard*(str: string): Board =
+  var pieces: seq[(Sq, Piece)]
+  for y, line in pairs(str.splitLines):
+    for x, c in line.pairs:
+      let color = if c.isUpperAscii: White else: Black
+      var piece: Piece
+      case c.toLowerAscii:
+      of 'p': piece = Pawn(color: color)
+      of 'n': piece = Knight(color: color)
+      of 'b': piece = Bishop(color: color)
+      of 'r': piece = Rook(color: color)
+      of 'q': piece = Queen(color: color)
+      of 'k': piece = King(color: color)
+      else: discard
+      pieces.add((sq(x, y), piece))
+  return pieces.toTable
 
 const INITIAL_BOARD_STR = """rnbqkbnr
                              pppppppp
@@ -42,3 +49,7 @@ const INITIAL_BOARD_STR = """rnbqkbnr
                              RNBQKBNR""".unindent
 
 let INITIAL_BOARD* = newBoard(INITIAL_BOARD_STR)
+
+
+when isMainModule:
+  echo "INITIAL_BOARD:\n", INITIAL_BOARD.toString

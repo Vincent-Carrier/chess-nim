@@ -1,13 +1,13 @@
 import ../pieces, ../strings, ../sq, strutils
 
 when isMainModule:
-  let actualMoves = Bishop(color: White).moves(sq(4,4), INITIAL_BOARD)
+  let actualMoves = Knight(color: White).moves(sq(4,4), INITIAL_BOARD)
   let expectedMovesString = """........
-                               .X.....X
-                               ..X...X.
-                               ...X.X..
                                ........
                                ...X.X..
+                               ..X...X.
+                               ........
+                               ..X...X.
                                ........
                                ........
                                """.unindent
