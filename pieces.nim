@@ -1,4 +1,4 @@
-import sq, movement, board, sequtils
+import sq, movement, board, sequtils, tables
 
 method moves*(p: Piece, sq: Sq, b: Board): seq[Sq] {.base.} =
   quit "to override"
@@ -7,7 +7,13 @@ method letter*(p: Piece): char {.base.} =
   quit "to override"
 
 
-type Pawn* = ref object of Piece
+type 
+  Pawn* = ref object of Piece
+  Knight* = ref object of Piece
+  Bishop* = ref object of Piece
+  Rook* = ref object of Piece
+  Queen* = ref object of Piece
+  King* = ref object of Piece
 
 method letter*(p: Pawn): char = 'p'
 
@@ -22,8 +28,6 @@ method moves*(p: Pawn, sq: Sq, b: Board): seq[Sq] =
     result.add(sq.slide(vec, p.color, b, 1))
 
 
-type Knight* = ref object of Piece
-
 method letter*(p: Knight): char = 'n'
 
 let L_SHAPE = fourDirections(Vec(x: 1, y: 2))
@@ -35,8 +39,6 @@ method moves*(p: Knight, sq: Sq, b: Board): seq[Sq] =
     result.add(sq.slide(vec, p.color, b, 1))
 
 
-type Bishop* = ref object of Piece
-
 method letter*(p: Bishop): char = 'b'
 
 let DIAGONALS = fourDirections(Vec(x: 1, y: 1))
@@ -47,8 +49,6 @@ method moves*(p: Bishop, sq: Sq, b: Board): seq[Sq] =
     echo result
 
 
-type Rook* = ref object of Piece
-
 method letter*(p: Rook): char = 'r'
 
 let STRAIGHT_LINES = fourDirections(Vec(x: 0, y: 1))
@@ -57,8 +57,6 @@ method moves*(p: Rook, sq: Sq, b: Board): seq[Sq] =
   for vec in STRAIGHT_LINES:
     result.add(sq.slide(vec, p.color, b))
 
-
-type Queen* = ref object of Piece
 
 method letter*(p: Queen): char = 'q'
 
@@ -69,10 +67,19 @@ method moves*(p: Queen, sq: Sq, b: Board): seq[Sq] =
     result.add(sq.slide(vec, p.color, b))
 
 
-type King* = ref object of Piece
-
 method letter*(p: King): char = 'k'
 
 method moves*(p: King, sq: Sq, b: Board): seq[Sq] =
   for vec in ALL_DIRECTIONS:
     result.add(sq.slide(vec, p.color, b, 1))
+
+
+
+proc threats*(square: Sq, color: Color, b: Board): int =
+  for sq, p in b.only(color.opposite):
+    if square in p.moves(sq, b):
+      result += 1
+
+proc threatened*(sq: Sq, color: Color, b: Board): bool =
+  sq.threats(color, b) > 0
+

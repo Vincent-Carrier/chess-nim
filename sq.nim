@@ -5,8 +5,16 @@ type Sq* = object
 
 proc sq*(x, y: int): Sq = Sq(x: x, y: y)
 
+proc sq*(str: string): Sq = 
+  Sq(x: str[0].ord - 97, y: 56 - str[1].ord)
+
+proc `$`*(sq: Sq): string =
+  chr(sq.x + 97) & $(8 - sq.y)
+
 proc hash*(sq: Sq): Hash =
-  Hash(sq.x + (sq.y * 992))
+  Hash(sq.x + (sq.y * 31))
+
+
 
 type Color* = enum White, Black
 
@@ -24,6 +32,7 @@ proc homeRow*(self: Color): int =
 
 
 when isMainModule:
-  debugEcho "hash: ", sq(4,4).hash
-  debugEcho "hash: ", sq(0,0).hash
-  debugEcho "hash: ", sq(2,6).hash
+  echo "sq(a4) - (0, 4): ", sq("a4") 
+  echo "sq(h8) - (7, 0): ", sq("h8") 
+  echo "sq(e4) - (4, 4): ", sq("e4") 
+

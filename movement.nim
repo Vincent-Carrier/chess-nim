@@ -30,6 +30,7 @@ proc slide*(depart: Sq, towards: Vec, color: Color, board: Board,
     else:
       result.add(candidate)
 
+
 when isMainModule:
   let diagonal = sq(4,4).slide(sq(1,1), White, EMPTY_BOARD)
   echo "diagonal: ", diagonal
