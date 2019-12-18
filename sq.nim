@@ -15,7 +15,6 @@ proc hash*(sq: Sq): Hash =
   Hash(sq.x + (sq.y * 31))
 
 
-
 type Color* = enum White, Black
 
 proc opposite*(self: Color): Color =

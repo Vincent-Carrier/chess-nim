@@ -15,12 +15,16 @@ proc toString*(b: Board): string =
         result.add('.')
     result.add('\n')
 
+proc `$`*(b: Board): string = b.toString
+
 proc toString*(moves: seq[Sq]): string =
   for y in 0..7:
     for x in 0..7:
       if sq(x,y) in moves: result.add('X')
       else: result.add('.')
     result.add('\n')
+
+proc `$`*(moves: seq[Sq]): string = moves.toString
 
 proc newBoard*(str: string): Board =
   var pieces: seq[(Sq, Piece)]
